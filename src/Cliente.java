@@ -11,4 +11,5 @@ abstract class Cliente {
                 "nome:'" + nome + "'}";
     }
     
+    public abstract String getCodigo();
 }

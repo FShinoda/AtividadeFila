@@ -12,5 +12,12 @@ public class PessoaFisica extends Cliente {
                 +"nome:'" + nome + "', "
                 +"cpf:'" + cpf + "'}"; 
     }
+
+    @Override
+    public String getCodigo() {
+        return cpf;
+    }
+
+    
     
 }
