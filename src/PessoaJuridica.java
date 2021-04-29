@@ -11,5 +11,10 @@ public class PessoaJuridica extends Cliente{
                 + "nome:'" + nome + "', "
                 + "cnpj:'" + cnpj + "'}";
     }
+
+    @Override
+    public String getCodigo(){
+        return cnpj;
+    }
     
 }
