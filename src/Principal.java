@@ -4,6 +4,7 @@ import static java.lang.Integer.*;
 public class Principal {
     public static void main(String[] args) throws Exception {
         
+        int numReservasMax = 5;
 
         Fila<Reserva> listaReserva = new Fila<Reserva>();
         Fila<Reserva> listaEspera = new Fila<Reserva>();
@@ -17,7 +18,7 @@ public class Principal {
 
                 switch(opcao){
                     case 1: // Reservar mesa
-                        if(posRes <= 5){
+                        if(posRes <= numReservasMax){
                             reservarMesa(listaReserva);
                             posRes++;
                         } else {
@@ -29,6 +30,11 @@ public class Principal {
 
                     break;
                     case 2: //Pesquisar reserva
+                        if(posRes > 0){
+                            pesquisarReserva(listaReserva, listaEspera, posRes, numReservasMax);
+                        } else {
+                            showMessageDialog(null, "Ainda não há reservas feitas!");
+                        }
 
                     break;
                     case 3: //Imprimir Reservas   
@@ -91,6 +97,7 @@ public class Principal {
         return reserva;
     }
 
+    //1.
     public static void reservarMesa(Fila<Reserva> lista){
         int tipoCliente = 0;
         Reserva resAux = null;
@@ -126,5 +133,36 @@ public class Principal {
         // Aloca a reserva na lista
         lista.enfileirar(resAux);
 
+    }
+
+    //aux
+    public static int procurarReserva(Fila<Reserva> lista, String codigoProcurado){
+
+        for(int i = 0; i < lista.size(); i++){
+            String codigo = lista.pegarElemento(i).cliente.getCodigo();
+            if(codigo.equals(codigoProcurado)){
+                return 0;
+            }
+        }
+
+        return -1;
+    }
+
+    //2.
+    public static void pesquisarReserva(Fila<Reserva> listaReserva, Fila<Reserva> listaEspera, int posRes, int numReservasMax){
+        String codigoProcurado = showInputDialog(null, "Digite o CPF/CNPJ a ser procurado");
+        
+        int aux = procurarReserva(listaReserva, codigoProcurado);
+
+        if(posRes > numReservasMax){
+            aux = procurarReserva(listaEspera, codigoProcurado);
+        }
+
+        if(aux == -1){
+            showMessageDialog(null, "Não foi encontrada nenhuma reserva no CPF/CNPJ " + codigoProcurado);
+        } else {
+            showMessageDialog(null, "Sua reserva no CPF/CNPJ " + codigoProcurado + " foi encontrada!");
+        }
+        
     }
 }
