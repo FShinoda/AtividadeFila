@@ -4,13 +4,15 @@ import static java.lang.Integer.*;
 public class Principal {
     public static void main(String[] args) throws Exception {
         
-        int numReservasMax = 5;
+        int numReservasMax = 4; // Apenas 5 mesas
 
         Fila<Reserva> listaReserva = new Fila<Reserva>();
         Fila<Reserva> listaEspera = new Fila<Reserva>();
 
         int opcao;
         int posRes = 0;
+
+        boolean definicaoLista; // true = Reserva; false = Espera
 
         do{
             try{
@@ -38,13 +40,23 @@ public class Principal {
 
                     break;
                     case 3: //Imprimir Reservas   
-
+                        definicaoLista = true;
+                        imprimir(listaReserva, listaEspera, definicaoLista);
+                        
                     break;
                     case 4: //Imprimir Espera
+                        definicaoLista = false;
+                        imprimir(listaReserva, listaEspera, definicaoLista);
 
                     break;
                     case 5: //Cancelar reserva  
-                        
+                        String infoCliente = showInputDialog(null, "Favor informar o CPF/CPNJ.");
+                        cancelarReserva(listaReserva, infoCliente);  
+
+                        Reserva aux = listaEspera.desenfileirar();
+
+                        listaReserva.enfileirar(aux);
+
                     break;
                     case 6: //Finaliza o programa
                     break;
@@ -164,5 +176,47 @@ public class Principal {
             showMessageDialog(null, "Sua reserva no CPF/CNPJ " + codigoProcurado + " foi encontrada!");
         }
         
+    }
+
+    // Imprimir Listas
+    public static void imprimir(Fila<Reserva> listaReserva, Fila<Reserva> listaEspera, boolean definicaoLista) {
+        Fila<Reserva> _lr = listaReserva;
+        Fila<Reserva> _le = listaEspera;
+        Reserva dados;
+        String info = "";
+
+        if(!definicaoLista) {
+            for(int idx = 0; idx < _le.size(); idx++) {
+                dados = _le.pegarElemento(idx);
+                info += dados.toString() + "\n";
+            }
+        } else {
+            for(int idx = 0; idx < _lr.size(); idx++) {
+                dados = _lr.pegarElemento(idx);
+                info += dados.toString() + "\n";
+            }
+        }
+
+        showMessageDialog(null, info);
+    }
+
+    // Cancelar Reserva
+    public static void cancelarReserva(Fila<Reserva> lista, String infoCliente) {
+        Reserva reserva;
+        String dados;
+        int checagem = procurarReserva(lista, infoCliente);
+
+        if(checagem == -1) {
+            showMessageDialog(null, "Não encontramos sua reserva.");
+        } else {
+            for(int k = 0; k < lista.size(); k++) {
+                reserva = lista.pegarElemento(k);
+                dados = reserva.cliente.getCodigo();
+    
+                if(dados.equals(infoCliente)) {
+                    lista.excluirElemento(k);
+                }
+            }
+        }
     }
 }
