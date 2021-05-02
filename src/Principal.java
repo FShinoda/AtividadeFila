@@ -13,6 +13,7 @@ public class Principal {
         int posRes = 0;
 
         boolean definicaoLista; // true = Reserva; false = Espera
+        boolean cancelamento;
 
         do{
             try{
@@ -51,11 +52,12 @@ public class Principal {
                     break;
                     case 5: //Cancelar reserva  
                         String infoCliente = showInputDialog(null, "Favor informar o CPF/CPNJ.");
-                        cancelarReserva(listaReserva, infoCliente);  
+                        cancelamento = cancelarReserva(listaReserva, infoCliente);  
 
-                        Reserva aux = listaEspera.desenfileirar();
-
-                        listaReserva.enfileirar(aux);
+                        if(cancelamento) {
+                            Reserva aux = listaEspera.desenfileirar();
+                            listaReserva.enfileirar(aux);
+                        }
 
                     break;
                     case 6: //Finaliza o programa
@@ -188,12 +190,17 @@ public class Principal {
         if(!definicaoLista) {
             for(int idx = 0; idx < _le.size(); idx++) {
                 dados = _le.pegarElemento(idx);
-                info += dados.toString() + "\n";
+
+                if(dados != null) {
+                    info += dados.toString() + "\n";
+                }
             }
         } else {
             for(int idx = 0; idx < _lr.size(); idx++) {
                 dados = _lr.pegarElemento(idx);
-                info += dados.toString() + "\n";
+                if(dados != null) {
+                    info += dados.toString() + "\n";
+                }
             }
         }
 
@@ -201,7 +208,7 @@ public class Principal {
     }
 
     // Cancelar Reserva
-    public static void cancelarReserva(Fila<Reserva> lista, String infoCliente) {
+    public static boolean cancelarReserva(Fila<Reserva> lista, String infoCliente) {
         Reserva reserva;
         String dados;
         int checagem = procurarReserva(lista, infoCliente);
@@ -217,6 +224,10 @@ public class Principal {
                     lista.excluirElemento(k);
                 }
             }
+
+            return true;
         }
+
+        return false;
     }
 }
